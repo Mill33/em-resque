@@ -32,7 +32,7 @@ module EventMachine
         @verbose = opts[:logging] || opts[:verbose] || false
         @very_verbose = opts[:vverbose] || false
         @pidfile = opts[:pidfile]
-        @redis_namespace = opts[:namespace] || :resque
+        @redis_namespace = Redis::Namespace.new("resque:cp_v2_#{Rails.env}") #opts[:namespace] || :resque
         @redis_uri = opts[:redis] || "redis://127.0.0.1:6379"
         @tick_instead_of_sleep = !opts[:tick_instead_of_sleep].nil? ? opts[:tick_instead_of_sleep] : false
 
@@ -110,7 +110,7 @@ module EventMachine
       # Deletes worker information from Redis if there's now processes for
       # their pids.
       def prune_dead_workers
-        @workers.first.prune_dead_workers if @workers.size > 0
+        # @workers.first.prune_dead_workers if @workers.size > 0
       end
 
       # Shuts down the machine if all fibers are dead.

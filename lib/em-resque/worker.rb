@@ -1,7 +1,7 @@
 require 'resque'
 
 # A non-forking version of Resque worker, which handles waiting with
-# a non-blocking version of sleep. 
+# a non-blocking version of sleep.
 class EventMachine::Resque::Worker < Resque::Worker
   attr_accessor :tick_instead_of_sleep
 
@@ -80,9 +80,9 @@ class EventMachine::Resque::Worker < Resque::Worker
     end
     EM.next_tick(&work_loop)
   end
-  
+
   # Be sure we're never forking
-  def fork
+  def fork(job)
     nil
   end
 
@@ -100,8 +100,8 @@ class EventMachine::Resque::Worker < Resque::Worker
     Resque::Stat << "processed_#{job['queue']}"
   end
 
-  # The string representation is the same as the id for this worker instance.
-  # Can be used with Worker.find
+  # # The string representation is the same as the id for this worker instance.
+  # # Can be used with Worker.find
   def to_s
     "#{super}:#{Fiber.current.object_id}"
   end
